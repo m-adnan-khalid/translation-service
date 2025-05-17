@@ -1,21 +1,22 @@
 version: '3.8'
+
 services:
-  app:
+  translation-service:
     build: .
-    ports: ["8080:8080"]
+    ports:
+      - "8080:8080"
+      - "9090:9090" # For H2 console if needed
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/translations
-      - JWT_SECRET=production-secret
-    depends_on:
-      - db
-
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: translations
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-volumes:
-  pgdata:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_SECURITY_USER_NAME=api-user@example.com
+      - SPRING_SECURITY_USER_PASSWORD=$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4H3d7J4P3ClD5G1W7Q6Q5aY8zNqK
+      - SPRING_SECURITY_USER_ROLES=USER
+      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_CACHE_TYPE=jcache
+      - SPRING_CACHE_JCACHE_CONFIG=classpath:ehcache.xml
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
