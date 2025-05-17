@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: Translation Service
+  security:
+    user:
+      name: api-user@example.com
+      password: "$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4H3d7J4P3ClD5G1W7Q6Q5aY8zNqK" # bcrypt of "password123"
+      roles: USER
+  datasource:
+    url: jdbc:h2:mem:translationdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      idle-timeout: 60000
+      pool-name: HikariCP
+      auto-commit: true
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+      javax:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
+
+  cache:
+    type: jcache
+    jcache:
+      config: classpath:ehcache.xml
+
+jwt:
+  secret: "a3f8d7e2c5b1a9f6e4d2c7b0a5e8f3d1a6c9b2e7f4d8a1c5b3e9f6a2d7c4b0"
+  expiration: 2700000 # 45 minutes in milliseconds (45 * 60 * 1000)

@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports: ["8080:8080"]
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/translations
+      - JWT_SECRET=production-secret
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: translations
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
